@@ -1,0 +1,3 @@
+import { ArrowDownRight, ArrowUpRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+export function DashboardCard({ label, value, detail, tone = "default" }: { label: string; value: string; detail: string; tone?: "default" | "violet" }) { return <div className={cn("rounded-2xl border p-4", tone === "violet" ? "border-violet-400/[.16] bg-violet-500/[.08]" : "border-white/[.07] bg-white/[.025]")}><p className="text-xs text-zinc-500">{label}</p><p className="mt-3 text-2xl font-medium tracking-tight">{value}</p><div className="mt-2 flex items-center gap-1 text-[11px] text-zinc-500">{tone === "violet" ? <ArrowUpRight size={12} className="text-violet-300" /> : <ArrowDownRight size={12} />} {detail}</div></div>; }

@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(cuid())
+  clerkId String @unique
+  email String @unique
+  name String?
+  createdAt DateTime @default(now())
+  todos Todo[]
+  briefings Briefing[]
+  events CalendarEvent[]
+  integrations Integration[]
+  settings Setting?
+  notifications Notification[]
+}
+model Todo {
+  id String @id @default(cuid())
+  title String
+  completed Boolean @default(false)
+  dueAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+model Briefing {
+  id String @id @default(cuid())
+  title String
+  summary String
+  detail String
+  category String
+  surfacedAt DateTime @default(now())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+model CalendarEvent {
+  id String @id @default(cuid())
+  title String
+  startsAt DateTime
+  endsAt DateTime
+  notes String?
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+model Integration {
+  id String @id @default(cuid())
+  provider String
+  status String @default("disconnected")
+  permissions Json
+  lastSyncedAt DateTime?
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([userId, provider])
+}
+model Setting {
+  id String @id @default(cuid())
+  theme String @default("dark")
+  notifications Boolean @default(true)
+  aiPreferences Json?
+  userId String @unique
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+model Notification {
+  id String @id @default(cuid())
+  title String
+  body String
+  read Boolean @default(false)
+  createdAt DateTime @default(now())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
